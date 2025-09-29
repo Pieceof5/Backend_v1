@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Testikäyttöliittymä korttien tekoon</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-4">
+    <h1 class="mb-4">Testikäyttöliittymä korttien tekoon</h1>
+
+    <!-- Otsikko ja lomake uuden kortin lisäämistä varten -->
+    <div class="mb-4">
+        <h4>Lisää uusi kortti</h4>
+        <form th:action="@{/ui/cards/add}" th:object="${card}" method="post" class="d-flex gap-2">
+            <input type="text" th:field="*{name}" placeholder="Kortin nimi" class="form-control" required/>
+            <button type="submit" class="btn btn-primary">Lisää kortti</button>
+        </form>
+    </div>
+
+    <hr/>
+
+    <!-- Käydään läpi kaikki kortit (cards-lista) -->
+    <div th:each="c : ${cards}">
+        <!-- Varmistetaan, että kortti ei ole null -->
+        <div th:if="${c != null}" class="mb-5">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h2 class="card-title" th:text="${c.name}">Kortin nimi</h2>
+
+                    <!-- Lomake uuden sarakkeen lisäämiseen kortille -->
+                    <h4>Lisää sarakkeiden nimet kortille</h4>
+                    <form th:action="@{'/ui/cards/' + ${c.id} + '/columns/add'}" th:object="${column}" method="post" class="d-flex gap-2 mb-3">
+                        <input type="text" th:field="*{name}" placeholder="Uusi sarake" class="form-control" required/>
+                        <button type="submit" class="btn btn-success">Lisää sarake</button>
+                    </form>
+
+                    <!-- Listataan kortin sarakkeet -->
+                    <ul class="list-group mb-3">
+                        <li th:each="col : ${c.columns}" class="list-group-item d-flex justify-content-between align-items-center">
+                            <span th:text="${col.name}"></span>
+                            <form th:action="@{'/ui/cards/' + ${c.id} + '/columns/' + ${col.id} + '/delete'}" method="post">
+                                <button type="submit" class="btn btn-danger btn-sm">Poista</button>
+                            </form>
+                        </li>
+                    </ul>
+
+                    <!-- Näytetään lomake uuden tehtävän lisäämiseksi vain, jos kortilla on sarakkeita -->
+                    <div th:if="${#lists.size(c.columns) > 0}">
+                        <h4>Lisää uusi tehtävä kortille</h4>
+                        <form th:action="@{'/ui/cards/' + ${c.id} + '/rows/add'}" th:object="${row}" method="post">
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th th:each="col : ${c.columns}" th:text="${col.name}">Sarakkeen nimi</th>
+                                        <th>Toiminnot</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="row : ${c.rows}">
+                                        <td th:each="col : ${c.columns}" th:text="${row.values[col.id]}">Arvo</td>
+                                        <td>
+                                            <form th:action="@{'/ui/cards/' + ${c.id} + '/rows/' + ${row.id} + '/delete'}" method="post">
+                                                <button type="submit" class="btn btn-danger btn-sm">Poista rivi</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td th:each="col : ${c.columns}">
+                                            <input type="text" th:field="*{values[__${col.id}__]}" placeholder="Uusi arvo" class="form-control"/>
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-primary btn-sm mt-1">Lisää rivi</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+
+                    <!-- Viesti, jos kortilla ei ole vielä sarakkeita -->
+                    <p th:if="${#lists.isEmpty(c.columns)}" class="text-muted">
+                        Lisää ensin vähintään yksi sarake, jotta voit lisätä tehtäviä.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS ja Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

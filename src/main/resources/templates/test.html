@@ -1,0 +1,36 @@
+<!-- Rivit taulukkona -->
+<h3>Rivit</h3>
+
+<!-- Lomake uuden rivin lisäämiseksi -->
+<form th:action="@{'/ui/cards/' + ${c.id} + '/rows/add'}" th:object="${row}" method="post">
+    <table border="1">
+        <thead>
+            <tr>
+                <th th:each="col : ${c.columns}" th:text="${col.name}">Sarakkeen nimi</th>
+                <th>Toiminnot</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Olemassa olevat rivit -->
+            <tr th:each="r : ${c.rows}">
+                <td th:each="col : ${c.columns}" th:text="${r.values[col.name]}">Arvo</td>
+                <td>
+                    <!-- Poistolomake jokaiselle riville -->
+                    <form th:action="@{'/ui/cards/' + ${c.id} + '/rows/' + ${r.id} + '/delete'}" method="post">
+                        <button type="submit">Poista rivi</button>
+                    </form>
+                </td>
+            </tr>
+
+            <!-- Uuden rivin syöttörivi -->
+            <tr>
+                <td th:each="col : ${c.columns}">
+                    <input type="text" th:field="*{values[__${col.name}__]}" />
+                </td>
+                <td>
+                    <button type="submit">Lisää rivi</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
