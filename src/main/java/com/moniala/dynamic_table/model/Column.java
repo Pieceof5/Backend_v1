@@ -1,5 +1,6 @@
 package com.moniala.dynamic_table.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +14,7 @@ public class Column {
 
     @ManyToOne
     @JoinColumn(name = "card_id")
+    @JsonBackReference // estää kierron
     private Card card;
 
     // Getterit ja setterit

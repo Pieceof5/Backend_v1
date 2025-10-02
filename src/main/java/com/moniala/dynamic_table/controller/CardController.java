@@ -32,4 +32,10 @@ public class CardController {
     public void deleteCard(@PathVariable Long id) {
         cardService.deleteCard(id);
     }
+    
+    @PostMapping("/{id}/delete")
+    public void deleteCardPost(@PathVariable Long id) {
+        cardService.deleteCard(id);
+        
+    }
 }

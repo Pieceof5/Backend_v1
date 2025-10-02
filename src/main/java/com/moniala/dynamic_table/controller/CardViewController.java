@@ -38,6 +38,12 @@ public class CardViewController {
         cardService.saveCard(card);
         return "redirect:/ui/cards";
     }
+    
+    @PostMapping("/{cardId}/delete")
+    public String deleteCard(@PathVariable Long cardId) {
+        cardService.deleteCard(cardId);
+        return "redirect:/ui/cards"; // Päivittää näkymän heti
+    }
 
     @PostMapping("/{cardId}/columns/add")
     public String addColumn(@PathVariable Long cardId, @ModelAttribute Column column) {
@@ -47,11 +53,11 @@ public class CardViewController {
         return "redirect:/ui/cards";
     }
 
-  /*  @PostMapping("/{cardId}/columns/{columnId}/delete")
+    @PostMapping("/{cardId}/columns/{columnId}/delete")
     public String deleteColumn(@PathVariable Long cardId, @PathVariable Long columnId) {
         columnService.deleteColumn(columnId);
         return "redirect:/ui/cards";
-    } */
+    } 
 
     @PostMapping("/{cardId}/rows/add")
     public String addRow(@PathVariable Long cardId, @ModelAttribute Row row) {

@@ -2,9 +2,13 @@ package com.moniala.dynamic_table.model;
 
 
 
+
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.Map;
 import jakarta.persistence.Column;
+
 
 @Entity
 @Table(name = "row_table")
@@ -15,14 +19,14 @@ public class Row {
 
     @ManyToOne
     @JoinColumn(name = "card_id")
+    @JsonBackReference // estää kierron
     private Card card;
 
     @ElementCollection
     @CollectionTable(name = "row_values", joinColumns = @JoinColumn(name = "row_id"))
     @MapKeyColumn(name = "column_name")
-    @Column(name = "column_value") // <-- vaihdettiin 'value' -> 'column_value'
+    @Column(name = "column_value")
     private Map<String, String> values;
-
 
     // getterit ja setterit
     public Long getId() { return id; }
@@ -34,6 +38,21 @@ public class Row {
     public Map<String, String> getValues() { return values; }
     public void setValues(Map<String, String> values) { this.values = values; }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 

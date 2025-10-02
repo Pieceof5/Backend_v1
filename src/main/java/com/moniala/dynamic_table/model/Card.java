@@ -2,6 +2,7 @@ package com.moniala.dynamic_table.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +16,11 @@ public class Card {
     private String name;
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Column> columns;
+    @JsonManagedReference // hallitsee columns-listaa
+    private List<Column> columns = new ArrayList<>();
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // hallitsee rows-listaa
     private List<Row> rows = new ArrayList<>();
 
     // getterit ja setterit

@@ -31,4 +31,13 @@ public class ColumnService {
     public List<Column> getAllColumns() {
         return columnRepository.findAll();
     }
+
+    public void deleteColumn(Long columnId) {
+        if (columnRepository.existsById(columnId)) {
+            columnRepository.deleteById(columnId);
+        } else {
+            throw new RuntimeException("Saraketta ei löydy ID:llä " + columnId);
+        }
+    }
+
 }
